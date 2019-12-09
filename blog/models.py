@@ -2,13 +2,14 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from froala_editor.fields import FroalaField
+from django.utils.translation import gettext_lazy as _
 
 
 class Post(models.Model):
     class Status(models.TextChoices):
-        PENDING_APPROVAL = 'pending_approval'
-        PUBLISHED = 'published'
-        UNPUBLISHED = 'unpublished'
+        PENDING_APPROVAL = 'pending_approval', _('Pending approval')
+        PUBLISHED = 'published', _('Published')
+        UNPUBLISHED = 'unpublished', _('Unpublished')
 
     title = models.CharField(max_length=100)
     content = FroalaField()
