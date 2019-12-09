@@ -26,7 +26,7 @@ def add_to_users_group(sender, instance, created, **kwargs):
             users_group = Group.objects.get(name='users')
         except Group.DoesNotExist:
             raise DefaultGroupNotFound('users')
-    instance.groups.add(users_group)
+        instance.groups.add(users_group)
 
 
 """Make every user added to 'admins' group a staff member."""
