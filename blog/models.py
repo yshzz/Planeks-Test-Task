@@ -11,6 +11,11 @@ class Post(models.Model):
         PUBLISHED = 'published', _('Published')
         UNPUBLISHED = 'unpublished', _('Unpublished')
 
+    class Meta:
+        permissions = [
+            ('publish_without_moderation', _('Can publish without moderation')),
+        ]
+
     title = models.CharField(max_length=100)
     content = FroalaField()
     date_posted = models.DateTimeField(default=timezone.now)
