@@ -30,6 +30,6 @@ class Command(BaseCommand):
                 try:
                     permission = Permission.objects.get(codename=codename)
                 except Permission.DoesNotExist:
-                    logging.warning("Permission {} not found.".format(codename))
+                    logging.warning("Permission {} not found".format(codename))
                     continue
                 new_group.permissions.add(permission)
