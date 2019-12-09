@@ -4,8 +4,15 @@ from django.contrib.auth import get_user_model
 from django.dispatch import receiver
 from .models import Profile
 from .exceptions import DefaultGroupNotFound
+from enum import Enum
 
 User = get_user_model()
+
+
+class DefaultGroup(Enum):
+    USERS = 'users'
+    REDACTORS = 'redactors'
+    ADMINS = 'admins'
 
 
 @receiver(post_save, sender=User)
@@ -21,11 +28,11 @@ def save_profile(sender, instance, **kwargs):
 
 @receiver(post_save, sender=User)
 def add_to_users_group(sender, instance, created, **kwargs):
-    if created:
+    if not instance.is_superuser and created:
         try:
-            users_group = Group.objects.get(name='users')
+            users_group = Group.objects.get(name=DefaultGroup.USERS.value)
         except Group.DoesNotExist:
-            raise DefaultGroupNotFound('users')
+            raise DefaultGroupNotFound(DefaultGroup.USERS.value)
         instance.groups.add(users_group)
 
 
@@ -39,9 +46,11 @@ def manage_admins(instance, action, reverse, model, pk_set, *args, **kwargs):
 
     if (model == Group) and (action in actions):
         try:
-            admins_group_pk = Group.objects.get(name='admins').pk
+            admins_group_pk = Group.objects.get(
+                name=DefaultGroup.ADMINS.value
+            ).pk
         except Group.DoesNotExist:
-            raise DefaultGroupNotFound('admins')
+            raise DefaultGroupNotFound(DefaultGroup.ADMINS.value)
         if admins_group_pk in pk_set:
             if action == actions[0]:
                 instance.is_staff = True
