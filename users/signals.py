@@ -22,11 +22,6 @@ def create_profile(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=User)
-def save_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
-
-@receiver(post_save, sender=User)
 def add_to_users_group(sender, instance, created, **kwargs):
     if not instance.is_superuser and created:
         try:
