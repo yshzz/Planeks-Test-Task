@@ -15,12 +15,15 @@ class Api:
         Base class for API interaction.
 
         Args:
+            endpoint (:obj:`str`): API base url.
+
+        Attributes:
             key (:obj:`str`): API key.
             endpoint (:obj:`str`): API base url.
     """
 
-    def __init__(self, key=None, endpoint=DEFAULT_BASE_URL):
-        self.key = key or env('MAILGUN_API_KEY')
+    def __init__(self, endpoint=DEFAULT_BASE_URL):
+        self.key = env('MAILGUN_API_KEY')
         self.endpoint = endpoint
 
     def _perform_request(self, url, method='GET', params=None):
@@ -53,8 +56,8 @@ class Api:
 
             Args:
                 url (:obj:`str`): Path where to execute request.
-                method (:obj:`str`, optional): HTTP request method.
-                params (:obj:`dict`, optional): HTTP request params.
+                method (:obj:`str`): HTTP request method.
+                params (:obj:`dict`): HTTP request params.
 
             Returns:
                 :obj:`dict`: Response data.
@@ -94,14 +97,17 @@ class Mailgun(Api):
         Mailgun client.
 
         Args:
+            endpoint (:obj:`str`): API base url.
+
+        Attributes:
             key (:obj:`str`): API key.
             endpoint (:obj:`str`): API base url.
             domain (:obj:`str`): Mailgun domain to use.
     """
 
-    def __init__(self, key=None, endpoint=DEFAULT_BASE_URL, domain=None):
-        super().__init__(key, endpoint)
-        self.domain = domain or env('MAILGUN_DOMAIN')
+    def __init__(self, endpoint=DEFAULT_BASE_URL):
+        super().__init__(endpoint)
+        self.domain = env('MAILGUN_DOMAIN')
 
     def send_email(self, to, subject, text, **kwargs):
         params = {
