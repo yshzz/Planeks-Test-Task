@@ -2,7 +2,6 @@ import requests
 from envparse import env
 from validators import url as url_validator
 from .exceptions import MailgunError
-import json
 
 GET = 'GET'
 POST = 'POST'
@@ -66,15 +65,12 @@ class Api:
 
         response = self._perform_request(url, method, params)
         data = response.json()
-        print(data)
 
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError:
             error_message = data.get('message')
             raise MailgunError(error_message)
-
-        print("s")
 
         return data
 
