@@ -42,9 +42,6 @@ class Api:
 
         requests_method, payload = lookup[method]
         kwargs = {payload: params, 'auth': ('api', self.key)}
-        print(requests_method)
-        print(kwargs)
-        print(url)
 
         return requests_method(url, **kwargs)
 
