@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cuser',
     'froala_editor',
+    'crispy_forms'
 ]
 
 AUTH_USER_MODEL = 'cuser.CUser'
