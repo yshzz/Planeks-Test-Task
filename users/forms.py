@@ -16,7 +16,7 @@ class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(
         label=_('Email Address'),
         max_length=254,
-        # validators=[validate_email],
+        validators=[validate_email],
         widget=forms.EmailInput(attrs={'autofocus': True})
     )
     first_name = forms.CharField(
