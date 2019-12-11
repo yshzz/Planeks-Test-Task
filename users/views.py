@@ -36,7 +36,6 @@ def register(request):
                 'token': account_activation_token.make_token(user)
             }
             domain = get_current_site(request).domain
-            print(get_current_site(request).__dict__)
             url = reverse('activate', kwargs=kwargs)
             activation_link = f'{request.scheme}://{domain}{url}'
             subject = 'Activate account.'
@@ -72,6 +71,6 @@ def activate(request, uidb64, token):
             request,
             'Your account has been created! You are now able to log in!'
         )
-        return redirect('blog:home')
+        return redirect('login')
     else:
         return HttpResponse('Invalid Token')
