@@ -3,6 +3,7 @@ Simple news site built with Django
 
 # To run locally
 Register at [Mailgun](https://www.mailgun.com/) and get your API key and Domain ([details](https://documentation.mailgun.com/en/latest/))
+
 Setup [broker](https://docs.celeryproject.org/en/latest/getting-started/brokers/) you like for celery to use
 
 Configure required environment variables:
