@@ -3,6 +3,7 @@ Simple news site built with Django
 
 # To run locally
 Register at [Mailgun](https://www.mailgun.com/) and get your API key and Domain ([details](https://documentation.mailgun.com/en/latest/))
+
 Configure required environment variables:
 + BROKER_URL
 + MAILGUN_API_KEY
