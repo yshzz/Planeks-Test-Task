@@ -1,0 +1,35 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <article class="media content-section">
+    <div class="media-body">
+      <div class="article-metadata">
+        <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+        <small class="text-muted">|</small>
+        <small class="text-muted">{{ post.author }}</small>
+      </div>
+      <h2 class="article-title">{{ post.title }}</h2>
+      <p class="article-content">{{ post.content|safe }}</p>
+    </div>
+  </article>
+  <div class="content-section">
+    {% if user.is_authenticated %}
+      <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+          <legend class="border-bottom mb-4">Leave Comment</legend>
+          {{ c_form|crispy }}
+        </fieldset>
+        <div class="form-group">
+          <button class="btn btn-outline-info" type="submit">Comment</button>
+        </div>
+      </form>
+    {% endif %}
+    {% for comment in post.comment_set.all %}
+    <blockquote class="blockquote">
+      <p class="mb-0">{{ comment.text }}</p>
+      <footer class="blockquote-footer"><cite>{{ comment.author }}</cite></footer>
+    </blockquote>
+    {% endfor %}
+  </div>
+{% endblock content %}

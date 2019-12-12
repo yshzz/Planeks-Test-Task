@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.conf import settings
 from froala_editor.fields import FroalaField
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
 
 
 class Post(models.Model):
@@ -25,6 +26,9 @@ class Post(models.Model):
         default=Status.PENDING_APPROVAL
     )
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def get_absolute_url(self):
+        return reverse('blog:post-detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.title
