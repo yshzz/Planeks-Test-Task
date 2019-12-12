@@ -1,10 +1,12 @@
+from enum import Enum
 from django.db.models.signals import post_save, m2m_changed
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.dispatch import receiver
 from .models import Profile
 from .exceptions import DefaultGroupNotFound
-from enum import Enum
+from blog.models import Comment
+from .tasks import send_notification_email
 
 User = get_user_model()
 
@@ -52,3 +54,11 @@ def manage_admins(instance, action, reverse, model, pk_set, *args, **kwargs):
             else:
                 instance.is_staff = False
             instance.save()
+
+
+@receiver(post_save, sender=Comment)
+def notify_post_author(sender, instance, created, **kwargs):
+    if created:
+        author_id = instance.post.author.id
+        comment_id = instance.id
+        send_notification_email.delay(author_id, comment_id)

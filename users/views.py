@@ -1,17 +1,15 @@
 from django.http import HttpResponse
-from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
+from django.contrib.sites.shortcuts import get_current_site
 from .forms import UserRegisterForm, ProfileRegisterForm
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_text
-from django.urls import reverse
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_text
 from .tokens import account_activation_token
-from .mailgun import Mailgun
+from .tasks import send_verification_email
 
 User = get_user_model()
-mg = Mailgun()
 
 
 def register(request):
@@ -31,17 +29,9 @@ def register(request):
             p_form.full_clean()
             p_form.save()
 
-            kwargs = {
-                'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user)
-            }
+            scheme = request.scheme
             domain = get_current_site(request).domain
-            url = reverse('activate', kwargs=kwargs)
-            activation_link = f'{request.scheme}://{domain}{url}'
-            subject = 'Activate account.'
-            text = f'Activate account: {activation_link}'
-            to = u_form.cleaned_data.get('email')
-            mg.send_email(to=to, subject=subject, text=text)
+            send_verification_email.delay(user.id, scheme, domain)
             return redirect('activate-done')
     else:
         u_form = UserRegisterForm()
