@@ -12,10 +12,16 @@ Configure required environment variables:
 + MAILGUN_DOMAIN
 
 Apply migrations
->**manage.py migrate**
+```python
+manage.py migrate
+```
 
 Then run **create_default_groups** manage.py command to create default permission groups
->**python manage.py create_default_groups**
+```python
+python manage.py create_default_groups
+```
 
 Now you are able to test application on your local machine
->**python manage.py runserver**
+```python
+python manage.py runserver
+```
